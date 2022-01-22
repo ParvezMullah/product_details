@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from .routers import products
+from .api.api_v1 import api as v1_api
 
 
 def get_application():
@@ -22,8 +22,8 @@ def get_application():
 app = get_application()
 
 app.include_router(
-    products.router,
-    prefix="/product_detail",
-    tags=["product_detail"],
+    v1_api.router,
+    prefix="/v1",
+    tags=["v1"],
     responses={404: {"description": "Not found"}},
 )
