@@ -24,6 +24,4 @@ app = get_application()
 app.include_router(
     v1_api.router,
     prefix="/v1",
-    tags=["v1"],
-    responses={404: {"description": "Not found"}},
-)
+    tags=["V1 Product Api"])
