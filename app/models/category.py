@@ -6,4 +6,4 @@ from app.models.base import BaseModelFields
 class Category(BaseModelFields):
     __tablename__ = "category"
 
-    name = Column(String)
+    name = Column(String, db_index=True)
