@@ -9,6 +9,7 @@ from app.models import manufacturer, category, model, part_category
 def get_products_query_filter(manufacturer_name: Optional[str] = None, category_name: Optional[str] = None,
                               model_number: Optional[str] = None, part_category_name: Optional[str] = None,
                               part_number: Optional[str] = None, db: Session = Depends(get_db)) -> dict:
+    # This will create dictionary of arguments that we need to add in our query.
     manufacturer_id = category_id = model_id = part_category_id = None
     filter_kwargs = dict()
     if not (manufacturer_name or category_name or model_number or part_category_name or part_number):

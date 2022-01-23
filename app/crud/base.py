@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, defer
 from app.db.database import Base
 
 
@@ -24,21 +24,32 @@ def get_or_create(session: Session, model: Base, defaults=None, **kwargs):
             return instance, True
 
 
-def filter_helper(session: Session, model: Base, **filter_kwargs):
-    query = session.query(model)
+def filter_helper(db: Session, model: Base, **filter_kwargs):
+    # To add all the given fields in the filter.
+    query = db.query(model)
     for attr, value in filter_kwargs.items():
         query = query.filter(getattr(model, attr) == value)
     query.filter(getattr(model, 'is_active') == True)
     return query
 
 
-def get_filtered_objects(session: Session, model: Base, **filter_kwargs):
-    query = filter_helper(session, model, **filter_kwargs)
+def get_filtered_objects(db: Session, model: Base, **filter_kwargs):
+    # To return multiple objects.
+    query = filter_helper(db, model, **filter_kwargs)
     results = query.all()
     return results
 
 
-def get_filtered_object(session: Session, model: Base, **filter_kwargs):
-    query = filter_helper(session, model, **filter_kwargs)
-    results = query.first()
-    return results
+def get_filtered_object(db: Session, model: Base, **filter_kwargs):
+    # To return single objects.
+    query = filter_helper(db, model, **filter_kwargs)
+    result = query.first()
+    return result
+
+
+def defer_fields(query, defer_field_names: list):
+    # this wont be fetched untill accessed.
+    for field_name in defer_field_names:
+        query = query.options(defer(field_name))
+    return query
+
