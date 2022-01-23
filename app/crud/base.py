@@ -1,4 +1,8 @@
-def get_or_create(session, model, defaults=None, **kwargs):
+from sqlalchemy.orm import Session
+from app.db.database import Base
+
+
+def get_or_create(session: Session, model: Base, defaults=None, **kwargs):
     instance = session.query(model).filter_by(**kwargs).one_or_none()
     if instance:
         return instance, False
@@ -20,4 +24,21 @@ def get_or_create(session, model, defaults=None, **kwargs):
             return instance, True
 
 
-def get_
+def filter_helper(session: Session, model: Base, **filter_kwargs):
+    query = session.query(model)
+    for attr, value in filter_kwargs.items():
+        query = query.filter(getattr(model, attr) == value)
+    query.filter(getattr(model, 'is_active') == True)
+    return query
+
+
+def get_filtered_objects(session: Session, model: Base, **filter_kwargs):
+    query = filter_helper(session, model, **filter_kwargs)
+    results = query.all()
+    return results
+
+
+def get_filtered_object(session: Session, model: Base, **filter_kwargs):
+    query = filter_helper(session, model, **filter_kwargs)
+    results = query.first()
+    return results
