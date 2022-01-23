@@ -6,4 +6,4 @@ from app.models.base import BaseModelFields
 class Model(BaseModelFields):
     __tablename__ = "model"
 
-    name = Column(String)
+    name = Column(String, unique=True)
