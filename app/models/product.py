@@ -14,5 +14,4 @@ class Product(BaseModelFields):
     part_number = Column(String)
 
     __table_args__ = (UniqueConstraint('manufacturer_id', 'category_id',
-                      'model_id' , 'part_category_id', 'part_number',
-                                       name='product_unique_combo'))
+                      'model_id' , 'part_category_id', 'part_number', name='product_unique_combinations'), )
