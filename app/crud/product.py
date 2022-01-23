@@ -1,6 +1,6 @@
-from app.crud.base import filter_helper, defer_fields
+from app.crud.base import filter_helper
 from sqlalchemy.orm import Session, selectinload
-from app.models import manufacturer, category, product, model, part_category
+from app.models import product
 
 
 def get_products_with_field_and_label(db: Session, **filter_kwargs):

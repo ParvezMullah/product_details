@@ -5,7 +5,6 @@ from typing import Optional
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.crud.product import get_products_with_field_and_label
-from app.models import manufacturer, category, product, model, part_category
 from app.api.utils import get_products_query_filter
 router = APIRouter()
 
