@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from fastapi_pagination import LimitOffsetPage, Page, add_pagination
+from fastapi_pagination import Page, add_pagination
 from fastapi_pagination.ext.sqlalchemy import paginate
 from typing import Optional
 from sqlalchemy.orm import Session
+from typing import List
 from app.db.database import get_db
 from app.crud.product import get_products_with_field_and_label
 from app.api.utils import get_products_query_filter
-from app.models import product
+from app.schemas import product
 router = APIRouter()
 
 
@@ -15,8 +16,7 @@ def demo():
                         detail="Demo Error.")
 
 
-@router.get("/product_details/default", response_model=Page[product.Product])
-@router.get("/users/limit-offset", response_model=LimitOffsetPage[product.Product])
+@router.get("/product_details", response_model=Page[product.Product])
 def get_product_details(manufacturer_name: Optional[str] = None, category_name: Optional[str] = None,
                         model_number: Optional[str] = None, part_category_name: Optional[str] = None,
                         part_number: Optional[str] = None, db: Session = Depends(get_db)) -> list:
