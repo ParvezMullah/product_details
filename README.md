@@ -55,3 +55,10 @@ This project is licensed under the terms of the Apache license.
 
 5.  To use API - Swagger
 http://localhost:8000/docs
+
+
+#To Do
+1. We can know more about required fields in the search api
+and based on that we can make indexes.
+2. We can add upserts for bulk create or update.
+3. write more unit tests.
