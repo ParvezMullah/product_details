@@ -2,23 +2,23 @@ from sqlalchemy.orm import Session, defer
 from app.db.database import Base
 
 
-def get_or_create(session: Session, model: Base, defaults=None, **kwargs):
-    instance = session.query(model).filter_by(**kwargs).one_or_none()
+def get_or_create(db: Session, model: Base, defaults=None, **kwargs):
+    instance = db.query(model).filter_by(**kwargs).one_or_none()
     if instance:
         return instance, False
     else:
         kwargs |= defaults or {}
         instance = model(**kwargs)
         try:
-            session.add(instance)
-            session.commit()
+            db.add(instance)
+            db.commit()
         except Exception:
             # The actual exception depends on the specific database
             # so we catch all exceptions. This is similar to the
             # official documentation:
             # https://docs.sqlalchemy.org/en/latest/orm/session_transaction.html
-            session.rollback()
-            instance = session.query(model).filter_by(**kwargs).one()
+            db.rollback()
+            instance = db.query(model).filter_by(**kwargs).one()
             return instance, False
         else:
             return instance, True
