@@ -1,5 +1,4 @@
-from fastapi import Depends
-
+from multiprocessing import Pool
 from product_scraper.utils.base_scraper import BaseProductScraper
 from product_scraper.utils.utils import append_path
 import requests
@@ -12,7 +11,6 @@ from app.models import manufacturer, category, model, part_category, product
 class UrPartsScraper(BaseProductScraper):
     def __init__(self, website_url : str):
         self.website_url = website_url
-        self.db_session = SessionLocal()
 
     def get_manufacturer_list(self) -> list[str]:
         page = requests.get(self.website_url)
@@ -53,47 +51,52 @@ class UrPartsScraper(BaseProductScraper):
             "a").text.strip() for category_item in part_category_items]
         return part_category_list
 
+    def process_manufacturer_products(self, manufacturer_name: str) -> None:
+        db_session = SessionLocal()
+        print(manufacturer_name)
+        manufacturer_obj, _ = get_or_create(
+            db_session, manufacturer.Manufacturer, name=manufacturer_name)
+        category_url = append_path(self.website_url, manufacturer_name)
+        category_list = self.get_category_list(category_url)
+        for category_name in category_list:
+            print(" " * 10, category_name)
+            category_obj, _ = get_or_create(
+                db_session, category.Category, name=category_name)
+            model_url = append_path(category_url, category_name)
+            model_list = self.get_model_list(model_url)
+            for model_name in model_list:
+                print(" " * 25, model_name)
+                model_obj, _ = get_or_create(
+                    db_session, model.Model, name=model_name)
+                part_category_url = append_path(model_url, model_name)
+                part_category_list = self.get_part_category_list(part_category_url)
+                part_category_dict = dict()
+                for part_category_name_number in part_category_list:
+                    part_category_name = part_category_name_number.split(
+                        '-')[-1].strip()
+                    part_number = ''.join(
+                        part_category_name_number.split('-')[:-1]).strip()
+                    # print(
+                    #     f"{' ' * 35 } part_category_name_number : {part_category_name_number}  part_number: {part_number}  part_category_name : {part_category_name}")
+                    part_category_obj = part_category_dict.get(
+                        part_category_name)
+                    if not part_category_obj:
+                        part_category_obj, _ = get_or_create(
+                            db_session, part_category.PartCategory, name=part_category_name)
+                        part_category_dict[part_category_name] = part_category_obj
+                    product_obj, _ = get_or_create(
+                        db_session,
+                        product.Product,
+                        manufacturer_id=manufacturer_obj.id,
+                        category_id=category_obj.id,
+                        model_id=model_obj.id,
+                        part_category_id=part_category_obj.id,
+                        part_number=part_number
+                    )
+
     def scraper_site(self) -> None:
+        # starts scraping the given site.
         print(f"Scraping : {self.website_url}")
         manufacterer_list = self.get_manufacturer_list()
-        for manufacterer_name in manufacterer_list:
-            print(manufacterer_name)
-            manufacturer_obj, _ = get_or_create(
-                self.db_session, manufacturer.Manufacturer, name=manufacterer_name)
-            category_url = append_path(self.website_url, manufacterer_name)
-            category_list = self.get_category_list(category_url)
-            for category_name in category_list:
-                print(" " * 10, category_name)
-                category_obj, _ = get_or_create(
-                    self.db_session, category.Category, name=category_name)
-                model_url = append_path(category_url, category_name)
-                model_list = self.get_model_list(model_url)
-                for model_name in model_list:
-                    print(" " * 25, model_name)
-                    model_obj, _ = get_or_create(
-                        self.db_session, model.Model, name=model_name)
-                    part_category_url = append_path(model_url, model_name)
-                    part_category_list = self.get_part_category_list(part_category_url)
-                    part_category_dict = dict()
-                    for part_category_name_number in part_category_list:
-                        part_category_name = part_category_name_number.split(
-                            '-')[-1].strip()
-                        part_number = ''.join(
-                            part_category_name_number.split('-')[:-1]).strip()
-                        print(
-                            f"{' ' * 35 } part_category_name_number : {part_category_name_number}  part_number: {part_number}  part_category_name : {part_category_name}")
-                        part_category_obj = part_category_dict.get(
-                            part_category_name)
-                        if not part_category_obj:
-                            part_category_obj, _ = get_or_create(
-                                self.db_session, part_category.PartCategory, name=part_category_name)
-                            part_category_dict[part_category_name] = part_category_obj
-                        product_obj, _ = get_or_create(
-                            self.db_session,
-                            product.Product,
-                            manufacturer_id=manufacturer_obj.id,
-                            category_id=category_obj.id,
-                            model_id=model_obj.id,
-                            part_category_id=part_category_obj.id,
-                            part_number=part_number
-                        )
+        with Pool(10) as p:
+            p.map(self.process_manufacturer_products, manufacterer_list)
