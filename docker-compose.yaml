@@ -11,6 +11,7 @@ services:
       - db
     volumes:
       - .:/app
+    container_name: product_details_app_1
 
   db:
     image: postgres:12
@@ -18,3 +19,4 @@ services:
       - .env
     ports:
       - "5432:5432"
+    container_name: product_details_db_1
