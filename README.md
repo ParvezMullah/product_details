@@ -14,7 +14,7 @@ docker-compose run app alembic revision --autogenerate -m "Added initial table"
 docker-compose run app alembic upgrade head
 
 2. #Scrape Product Details
-docker-compose run app python product-scraper/main.py https://www.urparts.com/index.cfm/page/catalogue
+docker-compose run app python product_scraper/main.py https://www.urparts.com/index.cfm/page/catalogue
 
 3. #Run Application and Database
 docker-compose up 
