@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.api.api_v1 import api as v1_api
-from app.models.utils import create_tables
 
 def get_application():
     _app = FastAPI(title=settings.PROJECT_NAME)
