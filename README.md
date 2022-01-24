@@ -8,22 +8,24 @@ This project is licensed under the terms of the Apache license.
 # product_details
 
 #Steps to Run project
-1. Create Database
+1. Run Application
     ```
+    docker-compose up 
+    ```
+
+2. Create Database
+    ```
+    #Ignore if you get any error on the below command.
     docker-compose run app alembic revision --autogenerate -m "Added initial table"
 
     docker-compose run app alembic upgrade head
-    ```
+    ``` 
 
-2. Scrape Product Details
+3. Scrape Product Details
     ```
     docker-compose run app python product_scraper/main.py https://www.urparts.com/index.cfm/page/catalogue
     ```
 
-3. Run Application
-    ```
-    docker-compose up 
-    ```
 
 4. Additional Info:
     1.  To login into the database
@@ -61,4 +63,4 @@ http://localhost:8000/docs
 1. We can know more about required fields in the search api
 and based on that we can make indexes.
 2. We can add upserts for bulk create or update.
-3. write more unit tests.
+3. Add more unit tests.
