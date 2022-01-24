@@ -19,7 +19,6 @@ def get_application():
     return _app
 
 
-# create_tables()
 app = get_application()
 
 app.include_router(
