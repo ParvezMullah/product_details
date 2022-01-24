@@ -9,19 +9,19 @@ This project is licensed under the terms of the Apache license.
 
 #Steps to Run project
 1. #Create Database
-docker-compose run app alembic revision --autogenerate -m "Added initial table"
+    1. docker-compose run app alembic revision --autogenerate -m "Added initial table"
 
-docker-compose run app alembic upgrade head
+    2. docker-compose run app alembic upgrade head
 
 2. #Scrape Product Details
-docker-compose run app python product_scraper/main.py https://www.urparts.com/index.cfm/page/catalogue
+    1. docker-compose run app python product_scraper/main.py https://www.urparts.com/index.cfm/page/catalogue
 
 3. #Run Application and Database
-docker-compose up 
+    1. docker-compose up 
 
 4. #Additional Info:
-To login into the database
-docker exec -it product_details_db_1  psql -h localhost -U postgres -d product_db
+1.  To login into the database
+    1. docker exec -it product_details_db_1  psql -h localhost -U postgres -d product_db
 
 #To use API - Swagger
 http://localhost:8000/docs
