@@ -11,11 +11,6 @@ from app.schemas import product
 router = APIRouter()
 
 
-def demo():
-    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                        detail="Demo Error.")
-
-
 @router.get("/product_details", response_model=Page[product.Product])
 def get_product_details(manufacturer_name: Optional[str] = None, category_name: Optional[str] = None,
                         model_number: Optional[str] = None, part_category_name: Optional[str] = None,
