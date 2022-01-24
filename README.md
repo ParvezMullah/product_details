@@ -22,6 +22,28 @@ This project is licensed under the terms of the Apache license.
 4. Additional Info:
     1.  To login into the database
         1. docker exec -it product_details_db_1  psql -h localhost -U postgres -d product_db
+        2. Reference for search
+        ```
+        SELECT 
+            prod.id,
+            manu.name AS manufacturer,
+            cat.name AS category,
+            model.name AS model,
+            part_category.name AS part_category,
+            prod.part_number
+        FROM
+            product AS prod
+                JOIN
+            category AS cat ON cat.id = prod.category_id
+                JOIN
+            model ON model.id = prod.model_id
+                JOIN
+            manufacturer AS manu ON manu.id = prod.manufacturer_id
+                JOIN
+            part_category ON part_category.id = prod.part_category_id
+        ORDER BY prod.id DESC
+        LIMIT 20;
+        ```
 
 5.  To use API - Swagger
 http://localhost:8000/docs
