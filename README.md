@@ -22,7 +22,7 @@ This project is licensed under the terms of the Apache license.
 4. Additional Info:
     1.  To login into the database
         1. docker exec -it product_details_db_1  psql -h localhost -U postgres -d product_db
-        2. Reference for search
+        2. Reference for search keys
         ```
         SELECT 
             prod.id,
