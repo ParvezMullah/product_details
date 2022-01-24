@@ -13,21 +13,26 @@ This project is licensed under the terms of the Apache license.
     docker-compose up 
     ```
 
-2. Create Database
+2. Run unittests
     ```
-    #Ignore if you get any error on the below command.
+    docker-compose run app pytest
+    ```
+
+3. Create Database
+    ```
+    #Ignore if you get any error in the below command.
     docker-compose run app alembic revision --autogenerate -m "Added initial table"
 
     docker-compose run app alembic upgrade head
     ``` 
 
-3. Scrape Product Details
+4. Scrape Product Details
     ```
     docker-compose run app python product_scraper/main.py https://www.urparts.com/index.cfm/page/catalogue
     ```
 
 
-4. Additional Info:
+5. Additional Info:
     1.  To login into the database
         ``` 
         docker exec -it product_details_db_1  psql -h localhost -U postgres -d product_db
@@ -55,7 +60,7 @@ This project is licensed under the terms of the Apache license.
         LIMIT 20;
         ```
 
-5.  To use API - Swagger
+6.  To use API - Swagger
 http://localhost:8000/docs
 
 
