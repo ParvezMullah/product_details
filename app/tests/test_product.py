@@ -9,7 +9,7 @@ def test_wrong_endpoint(client):
 
 def test_get_products_without_param(client):
     response = client.get("product_details")
-    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.status_code == status.HTTP_200_OK
 
 
 def test_get_products_with_all_params(client):
