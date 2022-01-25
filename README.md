@@ -65,7 +65,8 @@ http://localhost:8000/docs
 
 
 #To Do
-1. We can know more about required fields in the search api
+1. We can use Queue base approach and have multiple workers consuming the queue.
+2. We can know more about required fields in the search api
 and based on that we can make indexes.
-2. We can add upserts for bulk create or update.
-3. Add more unit tests.
+3. We can add upserts for bulk create or update.
+4. Add more unit tests.
