@@ -12,7 +12,6 @@ def get_products_queryset(manufacturer_name: Optional[str] = None, category_name
     product_tbl = aliased(product.Product)
     query = db.query(product_tbl)
     if part_number:
-        print(f"part_number : {part_number}")
         query = query.filter(product_tbl.part_number == part_number)
     if manufacturer_name:
         manufacturer_tbl = aliased(manufacturer.Manufacturer)
