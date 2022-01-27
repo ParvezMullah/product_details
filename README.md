@@ -7,7 +7,14 @@ This project was generated via [manage-fastapi](https://ycd.github.io/manage-fas
 This project is licensed under the terms of the Apache license.
 # product_details
 
-#Steps to Run project
+#Screen Shots
+![Alt text](https://github.com/ParvezMullah/product_details/blob/master/screenshots/1.png?raw=true "First Page - 1")
+
+
+![Alt text](https://github.com/ParvezMullah/product_details/blob/master/screenshots/2.png?raw=true "First Page - 2")
+
+
+# Steps to Run project
 1. Run Application
     ```
     docker-compose up 
